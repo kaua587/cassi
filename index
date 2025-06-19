@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para Cassi 🌷</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #fffafc;
+      color: #3c3c3c;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    .quiz-step {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .quiz-step.active {
+      display: block;
+    }
+    .question {
+      font-size: 1.3em;
+      margin-bottom: 20px;
+    }
+    .options button {
+      position: relative;
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 12px;
+      background: #ffeef3;
+      color: #3c3c3c;
+      transition: background 0.3s, transform 0.1s;
+      overflow: hidden;
+    }
+    .options button:hover {
+      background: #ffd6e5;
+    }
+    .options button:active {
+      transform: scale(0.97);
+    }
+    .heart {
+      position: absolute;
+      color: #ff9eb5;
+      font-size: 1.2em;
+      animation: floatUp 1s ease-out forwards;
+      pointer-events: none;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-40px) scale(1.5); }
+    }
+    .final {
+      font-size: 1.2em;
+      margin-top: 40px;
+      background: #fff0f5;
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      line-height: 1.5em;
+      animation: fadeIn 1s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz">
+    <div class="quiz-step active" data-step="1">
+      <div class="question">1. O que aquece seu coração de verdade? ✨</div>
+      <div class="options">
+        <button data-value="mensagem">Uma mensagem do nada só pra me lembrar que sou especial</button>
+        <button data-value="abraco">Um abraço sincero quando eu não peço</button>
+        <button data-value="escuta">Alguém que escuta de verdade</button>
+      </div>
+    </div>
+    <div class="quiz-step" data-step="2">
+      <div class="question">2. Em um dia difícil, o que mais te conforta? ☁️</div>
+      <div class="options">
+        <button data-value="lembranca">Saber que alguém pensou em mim mesmo de longe</button>
+        <button data-value="silencio">Silêncio com alguém que entende sem precisar falar</button>
+        <button data-value="riso">Uma frase boba que me faça rir</button>
+      </div>
+    </div>
+    <div class="quiz-step" data-step="3">
+      <div class="question">3. Quando você se sente mais você? 🌷</div>
+      <div class="options">
+        <button data-value="vulneravel">Quando posso ser vulnerável sem medo</button>
+        <button data-value="detalhes">Quando alguém repara em detalhes que ninguém vê</button>
+        <button data-value="leve">Quando tô rindo sem motivo, leve</button>
+      </div>
+    </div>
+    <div class="final" id="final"></div>
+  </div>
+
+  <script>
+    const steps = document.querySelectorAll('.quiz-step');
+    const finalEl = document.getElementById('final');
+    let currentStep = 0;
+    let answers = [];
+
+    const finais = {
+      mensagem_lembranca_detalhes: "Cassi, você é feita de detalhes que nem todo mundo vê. Mas eu vejo. E quanto mais eu reparo, mais eu gosto. 🌸",
+      escuta_silencio_vulneravel: "Cassi, com você o silêncio nunca é vazio. É espaço seguro. É abrigo. E é lindo estar perto do que é tão real. 🌙",
+      abraco_riso_leve: "Cassi, o jeito que você transforma o simples em alegria é mágico. Seu riso tem algo que bagunça o meu mundo — no melhor dos sentidos. 💫",
+      carinho_presenca: "Cassi, tem algo no seu jeito de estar que faz tudo ficar mais calmo. Você é abraço mesmo de longe. 🤍",
+      lembrada_vista: "Cassi, lembrar de você é automático… esquecer? Impossível. Você é presença mesmo quando tá longe. 🫶",
+      leveza_sol: "Cassi, com você até o caos vira comédia. Te ouvir rir é como sol entrando pela janela. ☀️💗"
+    };
+
+    const aleatorios = [
+      finais.carinho_presenca,
+      finais.lembrada_vista,
+      finais.leveza_sol
+    ];
+
+    function showStep(n) {
+      steps.forEach(step => step.classList.remove('active'));
+      if (steps[n]) steps[n].classList.add('active');
+    }
+
+    function handleClick(e) {
+      const value = e.target.getAttribute('data-value');
+      if (!value) return;
+      answers.push(value);
+      animateHearts(e.target);
+      currentStep++;
+      if (currentStep < steps.length) {
+        setTimeout(() => showStep(currentStep), 500);
+      } else {
+        setTimeout(() => generateFinal(), 600);
+      }
+    }
+
+    function generateFinal() {
+      const key = answers.join('_');
+      let frase = finais[key];
+      if (!frase) {
+        frase = aleatorios[Math.floor(Math.random() * aleatorios.length)];
+      }
+      finalEl.innerHTML = frase;
+    }
+
+    function animateHearts(button) {
+      for (let i = 0; i < 5; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = Math.random() * 80 + 10 + '%';
+        heart.style.top = '-10px';
+        heart.innerText = '❤';
+        button.appendChild(heart);
+        setTimeout(() => heart.remove(), 1000);
+      }
+    }
+
+    document.querySelectorAll('.options button').forEach(btn => {
+      btn.addEventListener('click', handleClick);
+    });
+  </script>
+</body>
+</html>
