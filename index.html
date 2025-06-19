@@ -5,39 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Para Cassi 🌷</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
       font-family: "Segoe UI", sans-serif;
-      background: #fffafc;
+      background: linear-gradient(to bottom, #fff0f5, #ffeef3);
       color: #3c3c3c;
       padding: 20px;
+      overflow: hidden;
+    }
+    #quiz {
       max-width: 500px;
-      margin: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     .quiz-step {
       display: none;
       animation: fadeIn 0.5s ease-in-out;
+      background: #ffffffcc;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(255, 180, 200, 0.2);
+      margin-bottom: 20px;
     }
     .quiz-step.active {
       display: block;
     }
     .question {
-      font-size: 1.3em;
+      font-size: 1.4em;
       margin-bottom: 20px;
+      text-align: center;
     }
     .options button {
       position: relative;
       display: block;
       width: 100%;
       margin: 10px 0;
-      padding: 12px;
+      padding: 14px;
       font-size: 1em;
       border: none;
-      border-radius: 12px;
+      border-radius: 16px;
       background: #ffeef3;
       color: #3c3c3c;
       transition: background 0.3s, transform 0.1s;
       overflow: hidden;
+      box-shadow: 0 3px 8px rgba(255, 180, 200, 0.2);
     }
     .options button:hover {
       background: #ffd6e5;
@@ -64,38 +85,57 @@
       font-size: 1.2em;
       margin-top: 40px;
       background: #fff0f5;
-      padding: 20px;
-      border-radius: 16px;
+      padding: 24px;
+      border-radius: 20px;
       text-align: center;
       line-height: 1.5em;
       animation: fadeIn 1s ease-in-out;
+      box-shadow: 0 4px 12px rgba(255, 180, 200, 0.2);
+    }
+    .falling-heart {
+      position: fixed;
+      top: -20px;
+      font-size: 1.2em;
+      color: #ffb6c1;
+      animation: fall 6s linear infinite;
+      z-index: 0;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+    audio {
+      display: none;
     }
   </style>
 </head>
 <body>
+  <audio autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/23/audio_98f49d3bb9.mp3" type="audio/mpeg">
+  </audio>
   <div id="quiz">
     <div class="quiz-step active" data-step="1">
       <div class="question">1. O que aquece seu coração de verdade? ✨</div>
       <div class="options">
-        <button data-value="mensagem">Uma mensagem do nada só pra me lembrar que sou especial</button>
-        <button data-value="abraco">Um abraço sincero quando eu não peço</button>
-        <button data-value="escuta">Alguém que escuta de verdade</button>
+        <button data-value="mensagem">Uma mensagem do nada só pra me lembrar que sou especial 💌</button>
+        <button data-value="abraco">Um abraço sincero quando eu não peço 🤗</button>
+        <button data-value="escuta">Alguém que escuta de verdade 👂</button>
       </div>
     </div>
     <div class="quiz-step" data-step="2">
       <div class="question">2. Em um dia difícil, o que mais te conforta? ☁️</div>
       <div class="options">
-        <button data-value="lembranca">Saber que alguém pensou em mim mesmo de longe</button>
-        <button data-value="silencio">Silêncio com alguém que entende sem precisar falar</button>
-        <button data-value="riso">Uma frase boba que me faça rir</button>
+        <button data-value="lembranca">Saber que alguém pensou em mim mesmo de longe 🌙</button>
+        <button data-value="silencio">Silêncio com alguém que entende sem precisar falar 🤍</button>
+        <button data-value="riso">Uma frase boba que me faça rir 😄</button>
       </div>
     </div>
     <div class="quiz-step" data-step="3">
       <div class="question">3. Quando você se sente mais você? 🌷</div>
       <div class="options">
-        <button data-value="vulneravel">Quando posso ser vulnerável sem medo</button>
-        <button data-value="detalhes">Quando alguém repara em detalhes que ninguém vê</button>
-        <button data-value="leve">Quando tô rindo sem motivo, leve</button>
+        <button data-value="vulneravel">Quando posso ser vulnerável sem medo 💗</button>
+        <button data-value="detalhes">Quando alguém repara em detalhes que ninguém vê ✨</button>
+        <button data-value="leve">Quando tô rindo sem motivo, leve ☀️</button>
       </div>
     </div>
     <div class="final" id="final"></div>
@@ -160,6 +200,18 @@
         setTimeout(() => heart.remove(), 1000);
       }
     }
+
+    function createFallingHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('falling-heart');
+      heart.innerText = '💗';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (Math.random() * 10 + 10) + 'px';
+      heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 10000);
+    }
+    setInterval(createFallingHeart, 500);
 
     document.querySelectorAll('.options button').forEach(btn => {
       btn.addEventListener('click', handleClick);
